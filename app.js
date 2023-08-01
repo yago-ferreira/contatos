@@ -18,14 +18,18 @@ db.connect((err) => {
   console.log('Conexão ao banco de dados estabelecida.');
 });
 
-// Rotas para manipular o CRUD
-app.get('/api/registros', (req, res) => {
-  const sql = 'SELECT * FROM contato';
-  db.query(sql, (err, result) => {
-    if (err) throw err;
-    res.json(result);
+// Rota para buscar todos os registros do banco de dados
+app.get('http://localhost:999/api/registros', (req, res) => {
+    const sql = 'SELECT * FROM contato';
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Erro ao buscar registros' });
+      } else {
+        res.json(result);
+      }
+    });
   });
-});
 
 
 // Inicie o servidor
