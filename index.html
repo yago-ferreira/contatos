@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contatos</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- dataTables -->
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" rel="stylesheet" />
+    <!--font awesome con CDN-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <!-- JQUERY -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!-- FONTAWESOME -->
+    <script src="https://kit.fontawesome.com/054b703b23.js" crossorigin="anonymous"></script>
+    <style>
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="background-color: #e9ecef !important">
+        <a class="navbar-brand logo" href="#">
+            <img class="rounded mx-auto d-block" src="/checklist/images/consul_1.gif" alt="Logo Consul">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Alterna navegação" id="toggle-menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav nav " role="tablist">
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top:140px">
+        <h4 class="mb-3">Contatos</h4>
+    </div>
+
+    <!-- Relatorios -->
+    <div class="container" style="margin-bottom: 2rem;">
+        <div class="table-responsive">
+            <table id="tb-contato" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Nome</th>
+                        <th>Idade</th>
+                        <th>Telefone</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <!-- JavaScript (Opcional) -->
+    <!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+
+
+
+    <script>
+        $(document).ready(function () {
+
+            var tb_contato = $('#tb-contato').DataTable({
+                dom: 'Bfrtip', // Mostra os botões na parte superior da tabela
+                processing: true, //Isso exibe uma mensagem de "processamento" 
+                serverSide: false, // habilita o processamento de dados no lado do servidor.
+                ordering: true, // Ativar ordenação
+                ajax: {
+                    url: "",
+                },
+                lengthMenu: [
+                    [30, 45, 75, -1],
+                    [30, 45, 75, 'All']
+                ],
+                language: {
+                    lengthMenu: "Exibir _MENU_ linhas por página",
+                    info: "Página _PAGE_ de _PAGES_",
+                    infoEmpty: "Nenhum registro encontrado",
+                    infoFiltered: "(Filtrado de _MAX_ registros totais)",
+                    search: "Pesquisar",
+                    emptyTable: "Nenhum dado disponível na tabela",
+                    zeroRecords: "Nenhum registro correspondente encontrado",
+                    paginate: {
+                        previous: "Anterior",
+                        next: "Próximo",
+                    },
+                },
+                buttons: [{
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf"></i> ',
+                    titleAttr: 'Exportar PDF',
+                    className: 'btn-custom-pdf btn btn-danger exportar'
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel"></i> ',
+                    titleAttr: 'Exportar excel',
+                    className: 'btn-custom-csv btn btn-success exportar'
+                },
+                {
+                    extend: 'copy',
+                    text: '<i class="fa fa-copy"></i> ',
+                    titleAttr: 'Copiar',
+                    className: 'btn-custom-copy btn btn-link exportar'
+                },
+                ],
+                columns: [{
+                    data: 'id',
+                    orderable: false,
+                    visible: false
+                },
+                {
+                    data: 'nome',
+                },
+                {
+                    data: 'idade'
+                },
+                {
+                    data: 'telefone'
+                }
+                ]
+            });
+
+
+            // Remover a classe 'dt-button' de todos botões da tela para estilizar os botões de exportar 
+            botoesElement = document.getElementsByClassName("exportar");
+            for (var i = 0; i < botoesElement.length; i++) {
+                var btn = botoesElement[i];
+                btn.classList.remove('dt-button');
+            }
+        });
+
+    </script>
+</body>
+
+</html>
