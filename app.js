@@ -1,10 +1,12 @@
+//express
 const express = require('express');
 const app = express();
-const mysql = require('mysql2');
-const port = 999; // Escolha a porta que desejar
+const port = 999;
+const mysql = require('mysql2');// Obtém o cliente
+const cors = require('cors'); // Importe o módulo 'cors'
 
-// Configuração do banco de dados
-const db = mysql.createConnection({
+// Cria a conexão com o Banco de Dados
+const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'Yago9259588!',
@@ -13,23 +15,27 @@ const db = mysql.createConnection({
 });
 
 // Conectar ao banco de dados
-db.connect((err) => {
+connection.connect((err) => {
   if (err) throw err;
   console.log('Conexão ao banco de dados estabelecida.');
 });
 
+
+
+app.use(cors());// Use o middleware 'cors'
+
 // Rota para buscar todos os registros do banco de dados
-app.get('http://localhost:999/api/registros', (req, res) => {
-    const sql = 'SELECT * FROM contato';
-    db.query(sql, (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erro ao buscar registros' });
-      } else {
-        res.json(result);
-      }
-    });
+app.get('/api/registros', (req, res) => {
+  const sql = 'SELECT * FROM `contato`';
+  connection.query(sql, function (err, results) {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Erro ao buscar registros' });
+    } else {
+      res.json(results); // Envie os resultados como resposta JSON
+    }
   });
+});
 
 
 // Inicie o servidor
