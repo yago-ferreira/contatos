@@ -31,8 +31,28 @@
 
     </nav>
 
-    <div class="container" style="margin-top:140px">
-        <h4 class="mb-3">Contatos</h4>
+    <div class="page-titles mx-0">
+
+        <div class=" container  mb-5" style="margin-top:140px">
+            <h4>Contatos</h4>
+            <form id="form-contato" action="novo.js" method="POST">
+                <div class="form-row"> 
+                    <div class="form-group col-md-4">
+                        <label for="">Nome</label>
+                        <input type="text" class="form-control" name="nome" required>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="">Idade</label>
+                        <input type="number" class="form-control" name="idade" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="">Telefone</label>
+                        <input type="text" class="form-control" name="numero" required>
+                    </div>
+                </div>
+                <button type="submit" id="btn-novo" type="button" class="btn btn-primary btn-xxs">Novo contato</button>
+            </form>
+        </div>
     </div>
 
     <!-- Relatorios -->
@@ -171,8 +191,7 @@
                         $("#tb-contato tbody").on("click", "button.iconEdit", function () {
                             var data = tb_contato.row($(this).parents("tr")).data();
                             console.log(data.id);
-                            // window.location =
-                            //     "index?modulo=service-desk&pg=terceirizado-editar&id=" + data.ID;
+                            
                         });
 
                         $("#tb-contato tbody").on("click", "button.iconDel", function () {
@@ -186,7 +205,6 @@
                     botoesElement = document.getElementsByClassName("exportar");
                     for (var i = 0; i < botoesElement.length; i++) {
                         var btn = botoesElement[i];
-                        console.log(btn);
                         btn.classList.remove('dt-button');
                     }
                 }) //fecha then
