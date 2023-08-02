@@ -26,7 +26,7 @@ app.use(cors());// Use o middleware 'cors'
 
 // Rota para buscar todos os registros do banco de dados
 app.get('/api/registros', (req, res) => {
-  const sql = 'SELECT * FROM `contato`';
+  const sql = "SELECT c.id, idade, nome, numero FROM contato c inner join telefone t on t.idcontato = c.id";
   connection.query(sql, function (err, results) {
     if (err) {
       console.error(err);

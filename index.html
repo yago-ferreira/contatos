@@ -78,76 +78,123 @@
         $(document).ready(function () {
             buscarRegistros()
                 .then((data) => {
-                    console.log(data); // Exibir dados no console do navegador
-
-                    var tb_contato = $('#tb-contato').DataTable({
-                        dom: 'Bfrtip', // Mostra os botões na parte superior da tabela
-                        processing: true, //Isso exibe uma mensagem de "processamento" 
-                        serverSide: false, // habilita o processamento de dados no lado do servidor.
-                        ordering: true, // Ativar ordenação
-                        lengthMenu: [
-                            [30, 45, 75, -1],
-                            [30, 45, 75, 'All']
-                        ],
-                        language: {
-                            lengthMenu: "Exibir _MENU_ linhas por página",
-                            info: "Página _PAGE_ de _PAGES_",
-                            infoEmpty: "Nenhum registro encontrado",
-                            infoFiltered: "(Filtrado de _MAX_ registros totais)",
-                            search: "Pesquisar",
-                            emptyTable: "Nenhum dado disponível na tabela",
-                            zeroRecords: "Nenhum registro correspondente encontrado",
-                            paginate: {
-                                previous: "Anterior",
-                                next: "Próximo",
-                            },
-                        },
-                        buttons: [{
-                            extend: 'pdfHtml5',
-                            text: '<i class="fas fa-file-pdf"></i> ',
-                            titleAttr: 'Exportar PDF',
-                            className: 'btn-custom-pdf btn btn-danger exportar'
-                        },
-                        {
-                            extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel"></i> ',
-                            titleAttr: 'Exportar excel',
-                            className: 'btn-custom-csv btn btn-success exportar'
-                        },
-                        {
-                            extend: 'copy',
-                            text: '<i class="fa fa-copy"></i> ',
-                            titleAttr: 'Copiar',
-                            className: 'btn-custom-copy btn btn-link exportar'
-                        },
-                        ],
-                        columns: [{
-                            data: 'id',
-                            orderable: false,
-                            visible: false
-                        },
-                        {
-                            data: 'nome',
-                        },
-                        {
-                            data: 'idade'
-                        },
-                        {
-                            data: 'telefone'
-                        }
-                        ]
+                    // console.log(data); // Exibir dados no console do navegador
+                    // Mapear os nomes das chaves dos dados recebidos para o formato esperado pelo DataTables
+                    const mappedData = data.map((item) => {
+                        return {
+                            'id': item.id,
+                            'nome': item.nome,
+                            'idade': item.idade,
+                            'numero': item.numero,
+                        };
                     });
-                })
+
+                    // TABELA CONTATO
+                    (function ($) {
+                        "use strict";
+
+                        var tb_contato = $('#tb-contato').DataTable({
+                            dom: 'Bfrtip', // Mostra os botões na parte superior da tabela
+                            processing: true, //Isso exibe uma mensagem de "processamento" 
+                            serverSide: false, // habilita o processamento de dados no lado do cliente.
+                            ordering: true, // Ativar ordenação
+                            lengthMenu: [
+                                [30, 45, 75, -1],
+                                [30, 45, 75, 'All']
+                            ],
+                            language: {
+                                lengthMenu: "Exibir _MENU_ linhas por página",
+                                info: "Página _PAGE_ de _PAGES_",
+                                infoEmpty: "Nenhum registro encontrado",
+                                infoFiltered: "(Filtrado de _MAX_ registros totais)",
+                                search: "Pesquisar",
+                                emptyTable: "Nenhum dado disponível na tabela",
+                                zeroRecords: "Nenhum registro correspondente encontrado",
+                                paginate: {
+                                    previous: "Anterior",
+                                    next: "Próximo",
+                                },
+                            },
+                            buttons: [{
+                                extend: 'pdfHtml5',
+                                text: '<i class="fas fa-file-pdf"></i> ',
+                                titleAttr: 'Exportar PDF',
+                                className: 'btn-custom-pdf btn btn-danger exportar'
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                text: '<i class="fas fa-file-excel"></i> ',
+                                titleAttr: 'Exportar excel',
+                                className: 'btn-custom-csv btn btn-success exportar'
+                            },
+                            {
+                                extend: 'copy',
+                                text: '<i class="fa fa-copy"></i> ',
+                                titleAttr: 'Copiar',
+                                className: 'btn-custom-copy btn btn-link exportar'
+                            },
+                            ],
+                            data: mappedData, // Utilizar os dados mapeados na tabela
+                            columns: [
+                                {
+                                    data: 'id',
+                                    orderable: false,
+                                    visible: false
+                                },
+                                {
+                                    data: 'nome',
+                                },
+                                {
+                                    data: 'idade'
+                                },
+                                {
+                                    data: 'numero',
+                                },
+                                {
+                                    className: "details-control",
+                                    orderable: false,
+                                    data: null,
+                                    defaultContent:
+                                        '<button class="iconEdit btn btn-primary shadow btn-xs sharp mr-1" title="Editar Contato"><i class="fa fa-pencil"></i></button>',
+                                },
+                                {
+                                    className: "details-control",
+                                    orderable: false,
+                                    data: null,
+                                    defaultContent:
+                                        '<button class="iconDel btn btn-danger shadow btn-xs sharp mr-1" title="Apagar Contato"><i class="fa fa-trash"></i></button>',
+                                },
+                            ]
+
+
+                        }); // fecha var
+                        $("#tb-contato tbody").on("click", "button.iconEdit", function () {
+                            var data = tb_contato.row($(this).parents("tr")).data();
+                            console.log(data.id);
+                            // window.location =
+                            //     "index?modulo=service-desk&pg=terceirizado-editar&id=" + data.ID;
+                        });
+
+                        $("#tb-contato tbody").on("click", "button.iconDel", function () {
+                            var data = tb_contato.row($(this).parents("tr")).data();
+                            console.log(data.id);
+                            // window.location =
+                            //     "index?modulo=service-desk&pg=terceirizado-apagar&id=" + data.ID;
+                        });
+                    })(jQuery);
+                    // Remover a classe 'dt-button' de todos botões da tela para estilizar os botões de exportar 
+                    botoesElement = document.getElementsByClassName("exportar");
+                    for (var i = 0; i < botoesElement.length; i++) {
+                        var btn = botoesElement[i];
+                        console.log(btn);
+                        btn.classList.remove('dt-button');
+                    }
+                }) //fecha then
                 .catch((error) => console.error(error));
 
 
 
-            // Remover a classe 'dt-button' de todos botões da tela para estilizar os botões de exportar 
-            botoesElement = document.getElementsByClassName("exportar");
-            for (var i = 0; i < botoesElement.length; i++) {
-                var btn = botoesElement[i];
-                btn.classList.remove('dt-button');
-            }
+
         });
 
     </script>
