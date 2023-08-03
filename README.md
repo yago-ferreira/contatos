@@ -50,4 +50,5 @@ CREATE TABLE `log_exclusao` (
 <ul>
   <li>CRUD de Contatos: Permite adicionar, visualizar, atualizar,excluir contatos e pesquisar.</li>
   <li>Exportar os dados da tabela: Possibilidade de exportar no formato PDF e Excel</li>
+  <li>Log de Auditoria: Possibilidade visualizar o rastro de exclusão do contato pela tabela log_exclusao</li>
 </ul>
