@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <!-- Relatorios -->
+
     <div class="container" style="margin-bottom: 2rem;">
         <div class="table-responsive">
             <table id="tb-contato" class="display" style="width:100%">
@@ -73,6 +73,48 @@
             </table>
         </div>
     </div>
+
+
+
+    <!-- Modal -->
+    <!-- Modal -->
+    <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Contato</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulário de edição dos dados -->
+                    <form id="form-editar-contato">
+                        <div class="form-group">
+                            <label for="edit-nome">Nome</label>
+                            <input type="text" class="form-control" id="edit-nome" value="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-idade">Idade</label>
+                            <input type="number" class="form-control" id="edit-idade" value="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-numero">Telefone</label>
+                            <input type="text" class="form-control" id="edit-numero" value="" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="btn-salvar-edicao">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <!-- JavaScript (Opcional) -->
     <!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -91,8 +133,6 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-
-
 
     <script src="buscar-dados.js"></script>
     <!-- <script src="novo.js"></script> -->
@@ -178,7 +218,7 @@
                                     orderable: false,
                                     data: null,
                                     defaultContent:
-                                        '<button class="iconEdit btn btn-primary shadow btn-xs sharp mr-1" title="Editar Contato"><i class="fa fa-pencil"></i></button>',
+                                        '<button class="iconEdit btn btn-primary shadow btn-xs sharp mr-1" title="Editar Contato" data-toggle="modal" data-target="#editarModal"><i class="fa fa-pencil"></i></button>',
                                 },
                                 {
                                     className: "details-control",
@@ -194,30 +234,15 @@
                         //botão editar
                         $("#tb-contato tbody").on("click", "button.iconEdit", async function () {
                             var data = tb_contato.row($(this).parents("tr")).data();
-                            // Função para editar os dados
-                        
-                                try {
-                                    const response = await fetch(`http://localhost:999/api/registros/${idContato}`, {
-                                        method: 'PUT',
-                                        headers: {
-                                            'Content-Type': 'application/json'
-                                        },
-                                        body: JSON.stringify(dadosEditados)
-                                    });
 
-                                    if (response.ok) {
-                                        alert('Contato e telefone atualizados com sucesso');
-                                        // Atualizar a página ou remover o formulário de edição, caso esteja usando DataTable
-                                        location.reload();
-                                    } else {
-                                        const data = await response.json();
-                                        alert(data.error || 'Erro ao atualizar contato e telefone');
-                                    }
-                                } catch (error) {
-                                    console.error(error);
-                                    alert('Erro ao conectar com o servidor');
-                                }
-                            
+                            localStorage.setItem("idContato", data.id);
+
+
+                            // Atualizar os campos do formulário de edição com os dados atuais do contato
+                            $("#edit-nome").val(data.nome);
+                            $("#edit-idade").val(data.idade);
+                            $("#edit-numero").val(data.numero);
+
 
                         });
                         //botão fechar
@@ -285,7 +310,9 @@
 
                     if (response.ok) {
                         alert('Novo contato e telefone inseridos com sucesso');
-                        window.location.href = '/index.html';
+                        // Atualizar a página 
+                        location.reload();
+                        
                     } else {
                         const data = await response.json();
                         alert(data.error || 'Erro ao inserir novo contato e telefone');
@@ -296,7 +323,56 @@
                 }
             });
 
+            // Código para enviar os dados do formulário de edição ao servidor quando o botão "Salvar" é clicado
+            $("#btn-salvar-edicao").on("click", async function () {
+                // Obter o valor do localStorage "userID"
+                const idContato = localStorage.getItem("idContato");
+            
 
+                const nome = $("#edit-nome").val();
+                const idade = $("#edit-idade").val();
+                const numero = $("#edit-numero").val();
+
+                // Criar um objeto para enviar os dados no corpo da requisição PUT
+                const dadosEditados = {
+                    nome: nome,
+                    idade: idade,
+                    numero: numero
+                };
+
+                // Realizar a requisição PUT com os dados editados
+                await editarDados(idContato, dadosEditados);
+
+
+            });
+
+
+            async function editarDados(idContato, dadosEditados) {
+                try {
+                  
+                    const response = await fetch(`http://localhost:999/api/registros/${idContato}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dadosEditados)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        alert('Contato alterado com sucesso');
+                        // Atualizar a página 
+                        location.reload();
+                    } else {
+                        const errorData = await response.json();
+                        alert('Erro ao editar contato e telefone');
+                        console.error(errorData.error || 'Erro ao editar contato e telefone');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('Erro ao conectar com o servidor');
+                }
+            }
 
 
         });
