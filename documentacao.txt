@@ -40,6 +40,14 @@ CREATE TABLE `telefone` (
   `numero` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`id`,`idcontato`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `log_exclusao` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `idcontato` int NOT NULL,
+  `ip` varchar(15) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `data_criacao` varchar(240) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 --------------------------------------------------O que o sistema pode fazer -------------------------------------------------------------------------
 O sistema permite realizar um CRUD (Create, Read, Update, Delete) de contatos, possibilitando o gerenciamento completo das informações de contato. Com esse sistema, 
 os usuários podem adicionar novos contatos, visualizar os contatos existentes, atualizar as informações dos contatos e também excluir contatos indesejados.

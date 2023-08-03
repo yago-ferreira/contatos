@@ -36,6 +36,14 @@ CREATE TABLE `telefone` (
   `numero` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`id`,`idcontato`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `log_exclusao` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `idcontato` int NOT NULL,
+  `ip` varchar(15) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `data_criacao` varchar(240) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 </code></pre>
 
 <h2>Funcionalidades</h2>
