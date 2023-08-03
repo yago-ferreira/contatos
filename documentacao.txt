@@ -1,0 +1,50 @@
+Documentação do Projeto
+-------------------------------------------Dependências do Projeto:--------------------------------------------------------------------------------
+
+cors (^2.8.5): O pacote "cors" é utilizado para lidar com as políticas de segurança CORS (Compartilhamento de Recursos de Origens Cruzadas) no servidor. 
+CORS é uma medida de segurança implementada pelos navegadores para evitar que recursos sejam acessados por domínios diferentes. 
+O pacote "cors" permite configurar as permissões de acesso a recursos no servidor, tornando possível que seu projeto frontend possa interagir com o backend de forma segura.
+
+express (^4.18.2): O pacote "express" é um framework para aplicativos web Node.js. Ele facilita a criação de rotas, middleware e manipulação de solicitações e respostas HTTP. O "express" torna mais intuitivo desenvolver um servidor web em Node.
+js, tornando-o mais rápido e eficiente.
+
+mysql2 (^3.5.2): O pacote "mysql2" é um driver Node.js para interagir com bancos de dados MySQL. Ele oferece uma interface para fazer consultas e transações com o banco de dados MySQL. Com o "mysql2", seu projeto Node.js pode se conectar ao banco de dados MySQL e executar operações de leitura e escrita nos dados.
+----------------------------------------Tecnologias usadas no projeto------------------------------------------------------------------------------
+HTML,CSS,Bootstrap, JavaScript, jQuery,mysql
+-------------------------------------------PASSOS--------------------------------------------------------------------------------------------------
+Instale o Node.js na sua máquina: O projeto é baseado no ambiente Node.js, portanto, é necessário tê-lo instalado para executar o servidor. Você pode baixá-lo no seguinte link: https://nodejs.org/
+
+Configure o ambiente para interagir com o banco de dados MySQL localmente:
+
+Instale o servidor MySQL na sua máquina a partir do link: https://dev.mysql.com/downloads/mysql/
+No projeto Node.js, instale o pacote "mysql2" executando o seguinte comando: npm install mysql2
+Para executar o servidor HTTP local, você pode usar o pacote http-server do Node.js. Primeiro, instale-o globalmente com o comando: npm install -g http-server
+Em seguida, navegue até o diretório do projeto onde o arquivo index.html está localizado e execute o seguinte comando para iniciar o servidor: http-server –cors
+Isso iniciará um servidor HTTP local e exibirá um endereço que você pode usar no navegador para acessar a sua página web.
+
+Caso encontre um erro no console do navegador relacionado ao CORS ("has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource"), siga os passos abaixo para habilitá-lo no Express.js usando a biblioteca "cors":
+
+Instale a biblioteca "cors" usando o npm: npm install cors
+
+--------------------------------------------------Criação das tabelas------------------------------------------------------------------------------
+CREATE TABLE `contato` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) DEFAULT NULL,
+  `idade` decimal(3,0) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `telefone` (
+  `idcontato` decimal(14,0) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `numero` varchar(16) DEFAULT NULL,
+  PRIMARY KEY (`id`,`idcontato`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+--------------------------------------------------O que o sistema pode fazer -------------------------------------------------------------------------
+O sistema permite realizar um CRUD (Create, Read, Update, Delete) de contatos, possibilitando o gerenciamento completo das informações de contato. Com esse sistema, 
+os usuários podem adicionar novos contatos, visualizar os contatos existentes, atualizar as informações dos contatos e também excluir contatos indesejados.
+
+Além disso, o sistema oferece a funcionalidade de exportar os dados dos contatos em dois formatos populares: PDF e Excel. 
+Essa funcionalidade permite que os usuários obtenham uma cópia dos contatos em um arquivo PDF, que é amplamente utilizado para visualização e impressão de documentos com formatação fixa. 
+Além disso, os usuários também têm a opção de exportar os contatos em um arquivo Excel, que é um formato de planilha eletrônica amplamente utilizado e que permite manipular os dados de forma tabular e eficiente.
+
