@@ -117,6 +117,23 @@ app.delete('/api/registros/:idcontato', (req, res) => {
 });
 
 
+// Rota para inserir um novo registro de log de exclusão
+app.post('/logExclusao', async (req, res) => {
+  try {
+    const { idcontato, data_criacao } = req.body;
+    // Insere o novo registro na tabela logExclusao
+    const query = 'INSERT INTO log_exclusao (idcontato, data_criacao) VALUES (?, ?)';
+    const values = [idcontato, data_criacao];
+    connection.query(query, values);
+
+    res.status(200).json({ message: 'Registro inserido com sucesso.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao inserir o registro.' });
+  }
+});
+
+
 
 // Inicie o servidor
 app.listen(port, () => {
