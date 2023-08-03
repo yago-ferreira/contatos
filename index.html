@@ -26,8 +26,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="background-color: #e9ecef !important">
         <a class="navbar-brand logo" href="#">
-            <!-- <img class="rounded mx-auto d-block" style="width: auto; max-height: 100px;" src="logo.png" alt="Logo"> -->
-            <img class="rounded mx-auto d-block" style="width: auto; max-height: 100px;" src="" alt="Logo">
+            <img class="rounded mx-auto d-block" style="width: auto; max-height: 100px;" src="logo.png" alt="Logo">
         </a>
 
     </nav>
@@ -135,13 +134,13 @@
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 
     <script src="buscar-dados.js"></script>
-    <!-- <script src="novo.js"></script> -->
-
+    <script src="novo.js"></script>
+    <script src="editar.js"></script>
+    <script src="apagar.js"></script>
     <script>
         $(document).ready(function () {
             buscarRegistros()
                 .then((data) => {
-                    // console.log(data); // Exibir dados no console do navegador
                     // Mapear os nomes das chaves dos dados recebidos para o formato esperado pelo DataTables
                     const mappedData = data.map((item) => {
                         return {
@@ -159,7 +158,7 @@
                         var tb_contato = $('#tb-contato').DataTable({
                             dom: 'Bfrtip', // Mostra os botões na parte superior da tabela
                             processing: true, //Isso exibe uma mensagem de "processamento" 
-                            serverSide: false, // habilita o processamento de dados no lado do cliente.
+                            serverSide: false, // desabilita o processamento de dados do lado do servidor.
                             ordering: true, // Ativar ordenação
                             lengthMenu: [
                                 [30, 45, 75, -1],
@@ -232,43 +231,22 @@
 
                         }); // fecha var da tabela
                         //botão editar
-                        $("#tb-contato tbody").on("click", "button.iconEdit", async function () {
+                        $("#tb-contato tbody").on("click", "button.iconEdit", function () {
                             var data = tb_contato.row($(this).parents("tr")).data();
 
                             localStorage.setItem("idContato", data.id);
-
 
                             // Atualizar os campos do formulário de edição com os dados atuais do contato
                             $("#edit-nome").val(data.nome);
                             $("#edit-idade").val(data.idade);
                             $("#edit-numero").val(data.numero);
 
-
                         });
                         //botão fechar
-                        $("#tb-contato tbody").on("click", "button.iconDel", async function () {
+                        $("#tb-contato tbody").on("click", "button.iconDel", function () {
                             var data = tb_contato.row($(this).parents("tr")).data();
 
-                            try {
-                                const response = await fetch(`http://localhost:999/api/registros/${data.id}`, {
-                                    method: 'DELETE',
-                                });
-
-                                if (response.ok) {
-                                    alert('Contato e telefone excluídos com sucesso');
-                                    // Atualizar a página 
-                                    location.reload();
-                                } else {
-                                    const data = await response.json();
-                                    alert(data.error || 'Erro ao excluir contato e telefone');
-                                }
-                            } catch (error) {
-                                console.error(error);
-                                alert('Erro ao conectar com o servidor');
-                            }
-                            console.log(data.id);
-                            // window.location =
-                            //     "index?modulo=service-desk&pg=terceirizado-apagar&id=" + data.ID;
+                            apagarContato(data);
                         });
                     })(jQuery);
                     // Remover a classe 'dt-button' de todos botões da tela para estilizar os botões de exportar 
@@ -279,102 +257,6 @@
                     }
                 }) //fecha then
                 .catch((error) => console.error(error));
-
-
-
-            const form = document.getElementById('form-contato');
-
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                const nome = document.getElementById('nome').value;
-                const idade = document.getElementById('idade').value;
-                const numero = document.getElementById('numero').value;
-
-
-                // Criar um objeto para enviar os dados no corpo da requisição POST
-                const dados = {
-                    nome: nome,
-                    idade: idade,
-                    numero: numero
-                };
-
-                try {
-                    const response = await fetch('http://localhost:999/api/registros', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(dados)
-                    });
-
-                    if (response.ok) {
-                        alert('Novo contato e telefone inseridos com sucesso');
-                        // Atualizar a página 
-                        location.reload();
-                        
-                    } else {
-                        const data = await response.json();
-                        alert(data.error || 'Erro ao inserir novo contato e telefone');
-                    }
-                } catch (error) {
-                    console.error(error);
-                    alert('Erro ao conectar com o servidor');
-                }
-            });
-
-            // Código para enviar os dados do formulário de edição ao servidor quando o botão "Salvar" é clicado
-            $("#btn-salvar-edicao").on("click", async function () {
-                // Obter o valor do localStorage "userID"
-                const idContato = localStorage.getItem("idContato");
-            
-
-                const nome = $("#edit-nome").val();
-                const idade = $("#edit-idade").val();
-                const numero = $("#edit-numero").val();
-
-                // Criar um objeto para enviar os dados no corpo da requisição PUT
-                const dadosEditados = {
-                    nome: nome,
-                    idade: idade,
-                    numero: numero
-                };
-
-                // Realizar a requisição PUT com os dados editados
-                await editarDados(idContato, dadosEditados);
-
-
-            });
-
-
-            async function editarDados(idContato, dadosEditados) {
-                try {
-                  
-                    const response = await fetch(`http://localhost:999/api/registros/${idContato}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(dadosEditados)
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        alert('Contato alterado com sucesso');
-                        // Atualizar a página 
-                        location.reload();
-                    } else {
-                        const errorData = await response.json();
-                        alert('Erro ao editar contato e telefone');
-                        console.error(errorData.error || 'Erro ao editar contato e telefone');
-                    }
-                } catch (error) {
-                    console.error(error);
-                    alert('Erro ao conectar com o servidor');
-                }
-            }
-
-
         });
 
 
