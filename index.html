@@ -26,28 +26,29 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="background-color: #e9ecef !important">
         <a class="navbar-brand logo" href="#">
-            <img class="rounded mx-auto d-block" style="width: auto; max-height: 100px;" src="logo.png" alt="Logo">
+            <!-- <img class="rounded mx-auto d-block" style="width: auto; max-height: 100px;" src="logo.png" alt="Logo"> -->
+            <img class="rounded mx-auto d-block" style="width: auto; max-height: 100px;" src="" alt="Logo">
         </a>
 
     </nav>
 
     <div class="page-titles mx-0">
 
-        <div class=" container  mb-5" style="margin-top:140px">
+        <div class=" container mb-5" style="margin-top:140px">
             <h4>Contatos</h4>
-            <form id="form-contato" action="novo.js" method="POST">
-                <div class="form-row"> 
+            <form id="form-contato" method="POST">
+                <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="">Nome</label>
-                        <input type="text" class="form-control" name="nome" required>
+                        <input type="text" class="form-control" name="nome" id="nome" required>
                     </div>
                     <div class="form-group col-md-2">
                         <label for="">Idade</label>
-                        <input type="number" class="form-control" name="idade" required>
+                        <input type="number" class="form-control" name="idade" id="idade" required>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Telefone</label>
-                        <input type="text" class="form-control" name="numero" required>
+                        <input type="text" class="form-control" name="numero" id="numero" required>
                     </div>
                 </div>
                 <button type="submit" id="btn-novo" type="button" class="btn btn-primary btn-xxs">Novo contato</button>
@@ -94,6 +95,8 @@
 
 
     <script src="buscar-dados.js"></script>
+    <!-- <script src="novo.js"></script> -->
+
     <script>
         $(document).ready(function () {
             buscarRegistros()
@@ -187,15 +190,57 @@
                             ]
 
 
-                        }); // fecha var
-                        $("#tb-contato tbody").on("click", "button.iconEdit", function () {
+                        }); // fecha var da tabela
+                        //botão editar
+                        $("#tb-contato tbody").on("click", "button.iconEdit", async function () {
                             var data = tb_contato.row($(this).parents("tr")).data();
-                            console.log(data.id);
-                            
-                        });
+                            // Função para editar os dados
+                        
+                                try {
+                                    const response = await fetch(`http://localhost:999/api/registros/${idContato}`, {
+                                        method: 'PUT',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(dadosEditados)
+                                    });
 
-                        $("#tb-contato tbody").on("click", "button.iconDel", function () {
+                                    if (response.ok) {
+                                        alert('Contato e telefone atualizados com sucesso');
+                                        // Atualizar a página ou remover o formulário de edição, caso esteja usando DataTable
+                                        location.reload();
+                                    } else {
+                                        const data = await response.json();
+                                        alert(data.error || 'Erro ao atualizar contato e telefone');
+                                    }
+                                } catch (error) {
+                                    console.error(error);
+                                    alert('Erro ao conectar com o servidor');
+                                }
+                            
+
+                        });
+                        //botão fechar
+                        $("#tb-contato tbody").on("click", "button.iconDel", async function () {
                             var data = tb_contato.row($(this).parents("tr")).data();
+
+                            try {
+                                const response = await fetch(`http://localhost:999/api/registros/${data.id}`, {
+                                    method: 'DELETE',
+                                });
+
+                                if (response.ok) {
+                                    alert('Contato e telefone excluídos com sucesso');
+                                    // Atualizar a página 
+                                    location.reload();
+                                } else {
+                                    const data = await response.json();
+                                    alert(data.error || 'Erro ao excluir contato e telefone');
+                                }
+                            } catch (error) {
+                                console.error(error);
+                                alert('Erro ao conectar com o servidor');
+                            }
                             console.log(data.id);
                             // window.location =
                             //     "index?modulo=service-desk&pg=terceirizado-apagar&id=" + data.ID;
@@ -212,8 +257,50 @@
 
 
 
+            const form = document.getElementById('form-contato');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const nome = document.getElementById('nome').value;
+                const idade = document.getElementById('idade').value;
+                const numero = document.getElementById('numero').value;
+
+
+                // Criar um objeto para enviar os dados no corpo da requisição POST
+                const dados = {
+                    nome: nome,
+                    idade: idade,
+                    numero: numero
+                };
+
+                try {
+                    const response = await fetch('http://localhost:999/api/registros', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dados)
+                    });
+
+                    if (response.ok) {
+                        alert('Novo contato e telefone inseridos com sucesso');
+                        window.location.href = '/index.html';
+                    } else {
+                        const data = await response.json();
+                        alert(data.error || 'Erro ao inserir novo contato e telefone');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('Erro ao conectar com o servidor');
+                }
+            });
+
+
+
 
         });
+
 
     </script>
 </body>

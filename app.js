@@ -4,6 +4,7 @@ const app = express();
 const port = 999;
 const mysql = require('mysql2');// Obtém o cliente
 const cors = require('cors'); // Importe o módulo 'cors'
+const bodyParser = require('body-parser');
 
 // Cria a conexão com o Banco de Dados
 const connection = mysql.createConnection({
@@ -21,21 +22,12 @@ connection.connect((err) => {
 });
 
 
+// Usando o middleware 'body-parser' para processar o corpo da requisição
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(cors());// Use o middleware 'cors'
 
-// Rota para buscar todos os registros do banco de dados
-app.get('/api/registros', (req, res) => {
-  const sql = "SELECT c.id, idade, nome, numero FROM contato c inner join telefone t on t.idcontato = c.id";
-  connection.query(sql, function (err, results) {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Erro ao buscar registros' });
-    } else {
-      res.json(results); // Envie os resultados como resposta JSON
-    }
-  });
-});
 
 // Rota para buscar todos os registros do banco de dados
 app.get('/api/registros', (req, res) => {
