@@ -1,7 +1,7 @@
 <h1 align="center">Projeto Contato - Documentação</h1>
 
 <h2>Descrição do Projeto</h2>
-<p>Este é o repositório do projeto Contato, que tem como objetivo demonstrar um CRUD de contatos com a possibilidade de exportar as queries de criação das tabelas em formato SQL. O projeto utiliza as tecnologias HTML, CSS, Bootstrap, JavaScript, jQuery e MySQL.</p>
+<p>Este é o repositório do projeto Contato, que tem como objetivo demonstrar um CRUD de contatos com a possibilidade de exportar os dados da tabela no formato PDF e Excel. O projeto utiliza as tecnologias HTML, CSS, Bootstrap, JavaScript,Node.js, jQuery e MySQL.</p>
 
 <h2>Dependências do Projeto</h2>
 <ul>
